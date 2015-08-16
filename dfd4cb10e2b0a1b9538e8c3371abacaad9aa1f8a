@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ad9bd40_9f113356",
+        "filename": "servers/src/main/java/tachyon/master/BlockInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1006023
+      },
+      "writtenOn": "2015-08-16T00:23:49Z",
+      "side": 1,
+      "message": "It is a good practice to always declare non-abstract class as final, to prevent other users accidentally extending it.",
+      "range": {
+        "startLine": 39,
+        "startChar": 29,
+        "endLine": 39,
+        "endChar": 30
+      },
+      "revId": "dfd4cb10e2b0a1b9538e8c3371abacaad9aa1f8a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
