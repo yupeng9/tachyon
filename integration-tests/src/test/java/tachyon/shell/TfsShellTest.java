@@ -542,6 +542,7 @@ public class TfsShellTest {
     Assert.assertEquals(expected, mOutput.toString());
     // clear testing username
     System.clearProperty(Constants.SECURITY_LOGIN_USERNAME);
+    MasterContext.reset();
   }
 
   @Test
@@ -578,6 +579,7 @@ public class TfsShellTest {
     Assert.assertEquals(expected, mOutput.toString());
     // clear testing username
     System.clearProperty(Constants.SECURITY_LOGIN_USERNAME);
+    MasterContext.reset();
   }
 
   @Test
@@ -600,6 +602,30 @@ public class TfsShellTest {
   @Test
   public void mkdirInvalidPathTest() throws IOException {
     Assert.assertEquals(-1, mFsShell.run("mkdir", "/test File Invalid Path"));
+  }
+
+  @Test
+  public void mkdirMultiPathTest() throws IOException, TachyonException {
+    String path1 = "/testDir1";
+    String path2 = "/testDir2";
+    String path3 = "/testDir2/testDir2.1";
+    Assert.assertEquals(0, mFsShell.run("mkdir", path1, path2, path3));
+
+    TachyonFile tFile = mTfs.open(new TachyonURI(path1));
+    FileInfo fileInfo = mTfs.getInfo(tFile);
+    Assert.assertNotNull(fileInfo);
+    Assert.assertTrue(fileInfo.isIsFolder());
+
+    tFile = mTfs.open(new TachyonURI(path2));
+    fileInfo = mTfs.getInfo(tFile);
+    Assert.assertNotNull(fileInfo);
+    Assert.assertTrue(fileInfo.isIsFolder());
+
+    tFile = mTfs.open(new TachyonURI(path3));
+    fileInfo = mTfs.getInfo(tFile);
+    Assert.assertNotNull(fileInfo);
+    Assert.assertTrue(fileInfo.isIsFolder());
+
   }
 
   @Test
@@ -902,6 +928,7 @@ public class TfsShellTest {
     Assert.assertEquals(expect, mOutput.toString());
     // clear testing username
     System.clearProperty(Constants.SECURITY_LOGIN_USERNAME);
+    MasterContext.reset();
   }
 
   private String getLsResultStr(TachyonURI tUri, int size, String testUser, String testGroup)
@@ -1223,5 +1250,6 @@ public class TfsShellTest {
     checkFilePersisted(mTfs.open(new TachyonURI("/testWildCards/foo/foobar2")), 20);
     checkFilePersisted(mTfs.open(new TachyonURI("/testWildCards/bar/foobar3")), 30);
     checkFilePersisted(mTfs.open(new TachyonURI("/testWildCards/foobar4")), 40);
+    ClientContext.reset();
   }
 }
