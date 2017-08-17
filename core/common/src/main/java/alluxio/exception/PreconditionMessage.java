@@ -31,7 +31,8 @@ public enum PreconditionMessage {
   ERR_CLOSED_BLOCK_OUT_STREAM("Cannot do operations on a closed BlockOutStream"),
   ERR_CLOSED_UNDER_FILE_SYSTEM_FILE_OUT_STREAM(
       "Cannot do operations on a closed UnderFileSystemFileOutStream"),
-  ERR_DIRECT_BUFFER_STATE("Buffer remaining %s should not be negative and should be no less than len %s to read"),
+  ERR_DIRECT_BUFFER_STATE(
+      "Buffer remaining %s should not be negative and should be no less than len %s to read"),
   ERR_END_OF_BLOCK("Cannot write past end of block"),
   ERR_READ_BUFFER_NULL("Read buffer cannot be null"),
   ERR_PUT_EMPTY_KEY("Cannot put an empty buffer as a key"),

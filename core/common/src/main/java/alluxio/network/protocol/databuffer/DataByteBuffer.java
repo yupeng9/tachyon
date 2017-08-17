@@ -61,6 +61,17 @@ public final class DataByteBuffer implements DataBuffer {
   }
 
   @Override
+  public void readBytes(ByteBuffer dst) {
+    ByteBuffer src = mBuffer;
+    if (mBuffer.remaining() > dst.remaining()) {
+      src = mBuffer.duplicate();
+      src.limit(src.position() + dst.remaining());
+      mBuffer.position(mBuffer.position() + dst.remaining());
+    }
+    dst.put(src);
+  }
+
+  @Override
   public int readableBytes() {
     return mBuffer.remaining();
   }
@@ -70,16 +81,5 @@ public final class DataByteBuffer implements DataBuffer {
     if (mBuffer.isDirect()) {
       BufferUtils.cleanDirectBuffer(mBuffer);
     }
-  }
-
-  @Override
-  public void readBytes(ByteBuffer dst) {
-    ByteBuffer src = mBuffer;
-    if (mBuffer.remaining() > dst.remaining()) {
-      src = mBuffer.duplicate();
-      src.limit(src.position() + dst.remaining());
-      mBuffer.position(mBuffer.position() + dst.remaining());
-    }
-    dst.put(src);
   }
 }

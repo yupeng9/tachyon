@@ -60,6 +60,11 @@ public final class DataFileChannel implements DataBuffer {
   }
 
   @Override
+  public void readBytes(ByteBuffer dst) {
+    throw new UnsupportedOperationException("DataFileChannel#readBytes is not implemented.");
+  }
+
+  @Override
   public int readableBytes() {
     throw new UnsupportedOperationException("DataFileChannel#readableBytes is not implemented.");
   }
@@ -67,10 +72,5 @@ public final class DataFileChannel implements DataBuffer {
   @Override
   public void release() {
     // Nothing we need to release explicitly, let GC take care of all objects.
-  }
-
-  @Override
-  public void readBytes(ByteBuffer dst) {
-    throw new UnsupportedOperationException("DataFileChannel#readBytes is not implemented.");
   }
 }

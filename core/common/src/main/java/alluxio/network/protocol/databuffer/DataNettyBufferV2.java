@@ -58,6 +58,16 @@ public final class DataNettyBufferV2 implements DataBuffer {
   }
 
   @Override
+  public void readBytes(ByteBuffer dst) {
+//    int bytesToRead = Math.min(mNettyBuf.readableBytes(), dst.remaining());
+//    while (bytesToRead > 0) {
+//      dst.put(mNettyBuf.readByte());
+//      bytesToRead--;
+//    }
+    throw new RuntimeException("DataNettyBufferV2::getReadOnlyByteBuffer is not supported.");
+  }
+
+  @Override
   public int readableBytes() {
     return mNettyBuf.readableBytes();
   }
@@ -68,15 +78,5 @@ public final class DataNettyBufferV2 implements DataBuffer {
   @Override
   public void release() {
     mNettyBuf.release();
-  }
-
-  @Override
-  public void readBytes(ByteBuffer dst) {
-//    int bytesToRead = Math.min(mNettyBuf.readableBytes(), dst.remaining());
-//    while (bytesToRead > 0) {
-//      dst.put(mNettyBuf.readByte());
-//      bytesToRead--;
-//    }
-    throw new RuntimeException("DataNettyBufferV2::getReadOnlyByteBuffer is not supported.");
   }
 }
