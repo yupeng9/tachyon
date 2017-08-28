@@ -81,8 +81,8 @@ public final class FileInStreamTest {
   @Parameterized.Parameters
   public static Collection<Object[]> data() {
     return Arrays.asList(new Object[][] {
-      {BlockInStreamSource.LOCAL},
-      {BlockInStreamSource.UFS},
+//      {BlockInStreamSource.LOCAL},
+//      {BlockInStreamSource.UFS},
       {BlockInStreamSource.REMOTE}
     });
   }
@@ -174,7 +174,7 @@ public final class FileInStreamTest {
    */
   @Test
   public void readHalfFile() throws Exception {
-    testReadBuffer((int) (FILE_LENGTH / 2));
+    testReadBuffer((int) (FILE_LENGTH / 2), false);
   }
 
   /**
@@ -182,7 +182,7 @@ public final class FileInStreamTest {
    */
   @Test
   public void readPartialBlock() throws Exception {
-    testReadBuffer((int) (BLOCK_LENGTH / 2));
+    testReadBuffer((int) (BLOCK_LENGTH / 2), false);
   }
 
   /**
@@ -190,7 +190,40 @@ public final class FileInStreamTest {
    */
   @Test
   public void readBlock() throws Exception {
-    testReadBuffer((int) BLOCK_LENGTH);
+    testReadBuffer((int) BLOCK_LENGTH, false);
+  }
+
+  /**
+   * Tests that reading the complete file using direct buffer read works.
+   */
+  @Test
+  public void readFileDirect() throws Exception {
+    testReadBuffer((int) FILE_LENGTH, true);
+  }
+
+
+  /**
+   * Tests that reading half of a file using direct buffer read  works.
+   */
+  @Test
+  public void readHalfFileDirect() throws Exception {
+    testReadBuffer((int) (FILE_LENGTH / 2), true);
+  }
+
+  /**
+   * Tests that reading a part of a file using direct buffer read  works.
+   */
+  @Test
+  public void readPartialBlockDirect() throws Exception {
+    testReadBuffer((int) (BLOCK_LENGTH / 2), true);
+  }
+
+  /**
+   * Tests that reading the complete block using direct buffer read works.
+   */
+  @Test
+  public void readBlockDirect() throws Exception {
+    testReadBuffer((int) BLOCK_LENGTH, true);
   }
 
   /**
@@ -198,7 +231,7 @@ public final class FileInStreamTest {
    */
   @Test
   public void readFile() throws Exception {
-    testReadBuffer((int) FILE_LENGTH);
+    testReadBuffer((int) FILE_LENGTH, false);
   }
 
   /**
@@ -580,9 +613,15 @@ public final class FileInStreamTest {
    *
    * @param dataRead the bytes to read
    */
-  private void testReadBuffer(int dataRead) throws Exception {
+  private void testReadBuffer(int dataRead, boolean direct) throws Exception {
     byte[] buffer = new byte[dataRead];
-    mTestStream.read(buffer);
+    if (direct) {
+      ByteBuffer directBuffer = ByteBuffer.allocate(dataRead);
+      mTestStream.read(directBuffer);
+      directBuffer.get(buffer);
+    } else {
+      mTestStream.read(buffer);
+    }
     mTestStream.close();
 
     Assert.assertArrayEquals(BufferUtils.getIncreasingByteArray(dataRead), buffer);

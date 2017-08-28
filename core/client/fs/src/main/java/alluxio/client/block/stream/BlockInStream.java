@@ -30,6 +30,7 @@ import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -194,6 +195,25 @@ public class BlockInStream extends InputStream implements BoundedStream, Seekabl
     mCurrentPacket.readBytes(b, off, toRead);
     mPos += toRead;
     return toRead;
+  }
+
+  public int read(ByteBuffer buf) throws IOException {
+    checkIfClosed();
+    Preconditions.checkArgument(buf != null, PreconditionMessage.ERR_READ_BUFFER_NULL);
+
+    readPacket();
+    if (mCurrentPacket == null) {
+      mEOF = true;
+    }
+    if (mEOF) {
+      closePacketReader();
+      return -1;
+    }
+    int oldPos = buf.position();
+    mCurrentPacket.readBytes(buf);
+    int bytesRead = buf.position() - oldPos;
+    mPos += bytesRead;
+    return bytesRead;
   }
 
   @Override

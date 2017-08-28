@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -160,6 +161,58 @@ public class FileInStream extends InputStream implements BoundedStream, Seekable
     closeOrCancelCacheStream();
     mClosed = true;
   }
+
+  public int read(ByteBuffer buf) throws IOException {
+    Preconditions.checkArgument(buf != null, PreconditionMessage.ERR_READ_BUFFER_NULL);
+    Preconditions.checkArgument(buf.remaining() >= 0,
+        PreconditionMessage.ERR_DIRECT_BUFFER_STATE.toString(), buf.remaining(), buf.remaining());
+    if (buf.remaining() == 0) {
+      return 0;
+    } else if (remaining() <= 0) {
+      return -1;
+    }
+
+    int oldPos = buf.position();
+    int bytesLeftToRead = buf.remaining();
+
+    while (bytesLeftToRead > 0 && remaining() > 0) {
+      updateStreams();
+      Preconditions.checkNotNull(mCurrentBlockInStream, PreconditionMessage.ERR_UNEXPECTED_EOF);
+
+      int bytesRead;
+      int posBeforeRead = buf.position();
+      try {
+        bytesRead = mCurrentBlockInStream.read(buf);
+      } catch (IOException e) {
+        throw AlluxioStatusException.fromIOException(e);
+      }
+      if (bytesRead > 0) {
+        if (mCurrentCacheStream != null) {
+          // set to position before read since the buf writes to the cache stream, after write the
+          // position increment back
+          buf.position(posBeforeRead);
+          try {
+            mCurrentCacheStream.write(buf, bytesRead);
+          } catch (IOException e) {
+            handleCacheStreamException(e);
+          }
+        }
+        mPos += bytesRead;
+        bytesLeftToRead -= bytesRead;
+      }
+    }
+
+    // reset old position so that the caller can read from position
+    buf.position(oldPos);
+
+    if (bytesLeftToRead == buf.remaining() && mCurrentBlockInStream.remaining() == 0) {
+      // Nothing was read, and the underlying stream is done.
+      return -1;
+    }
+
+    return buf.remaining() - bytesLeftToRead;
+  }
+
 
   @Override
   public int read() throws IOException {

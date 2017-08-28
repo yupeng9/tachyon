@@ -92,4 +92,9 @@ public final class DataNettyBuffer implements DataBuffer {
         "Reference count of the netty buffer is %s (1 expected).", mNettyBuf.refCnt());
     Preconditions.checkState(mNettyBuf.release(), "Release Netty ByteBuf failed.");
   }
+
+  @Override
+  public void readBytes(ByteBuffer dst) {
+    throw new UnsupportedOperationException("DataNettyBuffer#readBytes is not implemented.");
+  }
 }

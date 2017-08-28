@@ -66,4 +66,9 @@ public final class DataByteArrayChannel implements DataBuffer {
   public void release() {
     // Nothing we need to release explicitly, let GC take care of all objects.
   }
+
+  @Override
+  public void readBytes(ByteBuffer dst) {
+    throw new UnsupportedOperationException("DataByteArrayChannel#readBytes is not implemented.");
+  }
 }

@@ -12,10 +12,10 @@
 package alluxio.client;
 
 import alluxio.AlluxioURI;
+import alluxio.BaseIntegrationTest;
 import alluxio.Constants;
 import alluxio.LocalAlluxioClusterResource;
 import alluxio.PropertyKey;
-import alluxio.BaseIntegrationTest;
 import alluxio.client.file.FileInStream;
 import alluxio.client.file.FileOutStream;
 import alluxio.client.file.FileSystem;
@@ -377,7 +377,7 @@ public final class FileInStreamIntegrationTest extends BaseIntegrationTest {
   /**
    * Read large file remotely. Make sure the test does not timeout.
    */
-  @Test(timeout = 30000)
+  @Test(timeout = 300000)
   @LocalAlluxioClusterResource.Config(
       confParams = {PropertyKey.Name.USER_SHORT_CIRCUIT_ENABLED, "false",
           PropertyKey.Name.USER_BLOCK_SIZE_BYTES_DEFAULT, "16MB",

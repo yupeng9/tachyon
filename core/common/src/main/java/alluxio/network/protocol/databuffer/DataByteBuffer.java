@@ -71,4 +71,13 @@ public final class DataByteBuffer implements DataBuffer {
       BufferUtils.cleanDirectBuffer(mBuffer);
     }
   }
+
+  @Override
+  public void readBytes(ByteBuffer dst) {
+    int bytesToRead = Math.min(mBuffer.remaining(), dst.remaining());
+    while (bytesToRead > 0) {
+      dst.put(mBuffer.get());
+      bytesToRead--;
+    }
+  }
 }

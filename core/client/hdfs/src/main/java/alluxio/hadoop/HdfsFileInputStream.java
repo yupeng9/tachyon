@@ -21,6 +21,7 @@ import alluxio.exception.AlluxioException;
 import alluxio.exception.ExceptionMessage;
 import alluxio.exception.FileDoesNotExistException;
 
+import org.apache.hadoop.fs.ByteBufferReadable;
 import org.apache.hadoop.fs.FileSystem.Statistics;
 import org.apache.hadoop.fs.PositionedReadable;
 import org.apache.hadoop.fs.Seekable;
@@ -31,6 +32,7 @@ import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -38,7 +40,8 @@ import javax.annotation.concurrent.NotThreadSafe;
  * An input stream for reading a file from HDFS.
  */
 @NotThreadSafe
-public class HdfsFileInputStream extends InputStream implements Seekable, PositionedReadable {
+public class HdfsFileInputStream extends InputStream
+    implements Seekable, PositionedReadable, ByteBufferReadable {
   private static final Logger LOG = LoggerFactory.getLogger(HdfsFileInputStream.class);
 
   private final Statistics mStatistics;
@@ -218,5 +221,10 @@ public class HdfsFileInputStream extends InputStream implements Seekable, Positi
     long toSkip = Math.min(n, available());
     seek(mCurrentPosition + toSkip);
     return toSkip;
+  }
+
+  @Override
+  public int read(ByteBuffer buf) throws IOException {
+    return mInputStream.read(buf);
   }
 }

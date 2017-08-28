@@ -51,6 +51,15 @@ public interface DataBuffer {
   void readBytes(byte[] dst, int dstIndex, int length);
 
   /**
+   * Transfers this buffer's data to the specified destination starting at the current readerIndex
+   * until the destination's position reaches its limit, and increases the {@code readerIndex} by
+   * the number of the transferred bytes.
+   *
+   * @param dst the destination
+   */
+  void readBytes(ByteBuffer dst);
+
+  /**
    * @return the number of readable bytes remaining
    */
   int readableBytes();

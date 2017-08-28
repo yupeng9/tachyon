@@ -69,4 +69,13 @@ public final class DataNettyBufferV2 implements DataBuffer {
   public void release() {
     mNettyBuf.release();
   }
+
+  @Override
+  public void readBytes(ByteBuffer dst) {
+    int bytesToRead = Math.min(mNettyBuf.readableBytes(), dst.remaining());
+    while (bytesToRead > 0) {
+      dst.put(mNettyBuf.readByte());
+      bytesToRead--;
+    }
+  }
 }

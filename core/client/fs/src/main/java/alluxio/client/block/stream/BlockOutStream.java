@@ -30,6 +30,7 @@ import io.netty.buffer.PooledByteBufAllocator;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -148,6 +149,23 @@ public class BlockOutStream extends OutputStream implements BoundedStream, Cance
   @Override
   public void write(byte[] b) throws IOException {
     write(b, 0, b.length);
+  }
+
+  public void write(ByteBuffer buf, int len) throws IOException {
+    if (len == 0) {
+      return;
+    }
+
+    while (len > 0) {
+      updateCurrentPacket(false);
+      int bytesToWrite = Math.min(mCurrentPacket.writableBytes(), len);
+      len -= bytesToWrite;
+      while(bytesToWrite>0) {
+        mCurrentPacket.writeByte(buf.get());
+        bytesToWrite--;
+      }
+    }
+    updateCurrentPacket(false);
   }
 
   @Override
