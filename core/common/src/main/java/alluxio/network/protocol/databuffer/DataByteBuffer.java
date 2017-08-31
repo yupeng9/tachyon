@@ -74,10 +74,12 @@ public final class DataByteBuffer implements DataBuffer {
 
   @Override
   public void readBytes(ByteBuffer dst) {
-    int bytesToRead = Math.min(mBuffer.remaining(), dst.remaining());
-    while (bytesToRead > 0) {
-      dst.put(mBuffer.get());
-      bytesToRead--;
+    ByteBuffer src = mBuffer;
+    if (mBuffer.remaining() > dst.remaining()) {
+      src = mBuffer.duplicate();
+      src.limit(src.position() + dst.remaining());
+      mBuffer.position(mBuffer.position() + dst.remaining());
     }
+    dst.put(src);
   }
 }

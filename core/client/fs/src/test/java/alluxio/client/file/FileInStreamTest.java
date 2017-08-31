@@ -82,9 +82,9 @@ public final class FileInStreamTest {
   @Parameterized.Parameters
   public static Collection<Object[]> data() {
     return Arrays.asList(new Object[][] {
-//      {BlockInStreamSource.LOCAL},
+      {BlockInStreamSource.LOCAL},
 //      {BlockInStreamSource.UFS},
-      {BlockInStreamSource.REMOTE}
+//      {BlockInStreamSource.REMOTE}
     });
   }
 

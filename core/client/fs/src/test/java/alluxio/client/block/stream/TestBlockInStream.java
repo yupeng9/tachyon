@@ -12,6 +12,7 @@
 package alluxio.client.block.stream;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * A {@link BlockInStream} which reads from the given byte array. The stream is able to track how
@@ -38,6 +39,13 @@ public class TestBlockInStream extends BlockInStream {
   @Override
   public int positionedRead(long pos, byte[] b, int off, int len) throws IOException {
     int bytesRead = super.positionedRead(pos, b, off, len);
+    mBytesRead += bytesRead;
+    return bytesRead;
+  }
+
+  @Override
+  public int read(ByteBuffer buf) throws IOException {
+    int bytesRead = super.read(buf);
     mBytesRead += bytesRead;
     return bytesRead;
   }
