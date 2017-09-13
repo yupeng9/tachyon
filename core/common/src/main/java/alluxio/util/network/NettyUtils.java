@@ -149,6 +149,11 @@ public final class NettyUtils {
    * @return true if the domain socket is enabled on this client
    */
   public static boolean isDomainSocketSupported(WorkerNetAddress workerNetAddress) {
+    Preconditions.checkNotNull(workerNetAddress.getHost(),
+        "worker net address host" + workerNetAddress);
+    Preconditions.checkNotNull(NetworkAddressUtils.getClientHostName(), "client host name");
+    Preconditions.checkNotNull(workerNetAddress.getDomainSocketPath(),
+        "domain socket path" + workerNetAddress);
     return workerNetAddress.getHost().equals(NetworkAddressUtils.getClientHostName())
         && !workerNetAddress.getDomainSocketPath().isEmpty()
         && CHANNEL_TYPE == ChannelType.EPOLL;
