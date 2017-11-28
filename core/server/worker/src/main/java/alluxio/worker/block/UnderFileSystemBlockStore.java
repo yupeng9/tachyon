@@ -107,6 +107,9 @@ public final class UnderFileSystemBlockStore implements SessionCleanable {
       }
       Set<Long> sessionIds = mBlockIdToSessionIds.get(blockId);
       if (sessionIds != null && sessionIds.size() >= options.getMaxUfsReadConcurrency()) {
+        LOG.info(
+            "Acquire access from session " + sessionId + " for block " + blockId + ", total sessions "
+                + sessionIds.size() + " more than threshold " + options.getMaxUfsReadConcurrency());
         return false;
       }
       if (sessionIds == null) {
@@ -114,7 +117,9 @@ public final class UnderFileSystemBlockStore implements SessionCleanable {
         mBlockIdToSessionIds.put(blockId, sessionIds);
       }
       sessionIds.add(sessionId);
-
+      LOG.info(
+          "Acquire access from session " + sessionId + " for block " + blockId + ", total sessions "
+              + sessionIds.size() + " less than threshold " + options.getMaxUfsReadConcurrency());
       mBlocks.put(key, new BlockInfo(blockMeta));
 
       Set<Long> blockIds = mSessionIdToBlockIds.get(sessionId);
@@ -181,6 +186,7 @@ public final class UnderFileSystemBlockStore implements SessionCleanable {
    *
    * @param sessionId the session ID
    */
+  @Override
   public void cleanupSession(long sessionId) {
     Set<Long> blockIds;
     try (LockResource lr = new LockResource(mLock)) {
