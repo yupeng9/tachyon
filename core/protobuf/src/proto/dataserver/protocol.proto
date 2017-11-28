@@ -37,7 +37,7 @@ message OpenUfsBlockOptions {
   optional int64 offset_in_file = 2;
   // The block size.
   optional int64 block_size = 3;
-  optional int32 maxUfsReadConcurrency = 4;
+  optional int32 maxUfsReadConcurrency = 64;
   optional int64 mountId = 5;
   // If set, do not try to cache the block locally when reading the data from the UFS.
   optional bool no_cache = 6;

@@ -1308,13 +1308,13 @@ public final class Protocol {
      */
     long getBlockSize();
 
-    // optional int32 maxUfsReadConcurrency = 4;
+    // optional int32 maxUfsReadConcurrency = 64;
     /**
-     * <code>optional int32 maxUfsReadConcurrency = 4;</code>
+     * <code>optional int32 maxUfsReadConcurrency = 64;</code>
      */
     boolean hasMaxUfsReadConcurrency();
     /**
-     * <code>optional int32 maxUfsReadConcurrency = 4;</code>
+     * <code>optional int32 maxUfsReadConcurrency = 64;</code>
      */
     int getMaxUfsReadConcurrency();
 
@@ -1444,11 +1444,6 @@ public final class Protocol {
               blockSize_ = input.readInt64();
               break;
             }
-            case 32: {
-              bitField0_ |= 0x00000008;
-              maxUfsReadConcurrency_ = input.readInt32();
-              break;
-            }
             case 40: {
               bitField0_ |= 0x00000010;
               mountId_ = input.readInt64();
@@ -1462,6 +1457,11 @@ public final class Protocol {
             case 58: {
               bitField0_ |= 0x00000040;
               user_ = input.readBytes();
+              break;
+            }
+            case 512: {
+              bitField0_ |= 0x00000008;
+              maxUfsReadConcurrency_ = input.readInt32();
               break;
             }
           }
@@ -1595,17 +1595,17 @@ public final class Protocol {
       return blockSize_;
     }
 
-    // optional int32 maxUfsReadConcurrency = 4;
-    public static final int MAXUFSREADCONCURRENCY_FIELD_NUMBER = 4;
+    // optional int32 maxUfsReadConcurrency = 64;
+    public static final int MAXUFSREADCONCURRENCY_FIELD_NUMBER = 64;
     private int maxUfsReadConcurrency_;
     /**
-     * <code>optional int32 maxUfsReadConcurrency = 4;</code>
+     * <code>optional int32 maxUfsReadConcurrency = 64;</code>
      */
     public boolean hasMaxUfsReadConcurrency() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional int32 maxUfsReadConcurrency = 4;</code>
+     * <code>optional int32 maxUfsReadConcurrency = 64;</code>
      */
     public int getMaxUfsReadConcurrency() {
       return maxUfsReadConcurrency_;
@@ -1736,9 +1736,6 @@ public final class Protocol {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeInt64(3, blockSize_);
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeInt32(4, maxUfsReadConcurrency_);
-      }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeInt64(5, mountId_);
       }
@@ -1747,6 +1744,9 @@ public final class Protocol {
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         output.writeBytes(7, getUserBytes());
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeInt32(64, maxUfsReadConcurrency_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -1769,10 +1769,6 @@ public final class Protocol {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(3, blockSize_);
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(4, maxUfsReadConcurrency_);
-      }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(5, mountId_);
@@ -1784,6 +1780,10 @@ public final class Protocol {
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(7, getUserBytes());
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(64, maxUfsReadConcurrency_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2216,22 +2216,22 @@ public final class Protocol {
         return this;
       }
 
-      // optional int32 maxUfsReadConcurrency = 4;
+      // optional int32 maxUfsReadConcurrency = 64;
       private int maxUfsReadConcurrency_ ;
       /**
-       * <code>optional int32 maxUfsReadConcurrency = 4;</code>
+       * <code>optional int32 maxUfsReadConcurrency = 64;</code>
        */
       public boolean hasMaxUfsReadConcurrency() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional int32 maxUfsReadConcurrency = 4;</code>
+       * <code>optional int32 maxUfsReadConcurrency = 64;</code>
        */
       public int getMaxUfsReadConcurrency() {
         return maxUfsReadConcurrency_;
       }
       /**
-       * <code>optional int32 maxUfsReadConcurrency = 4;</code>
+       * <code>optional int32 maxUfsReadConcurrency = 64;</code>
        */
       public Builder setMaxUfsReadConcurrency(int value) {
         bitField0_ |= 0x00000008;
@@ -2240,7 +2240,7 @@ public final class Protocol {
         return this;
       }
       /**
-       * <code>optional int32 maxUfsReadConcurrency = 4;</code>
+       * <code>optional int32 maxUfsReadConcurrency = 64;</code>
        */
       public Builder clearMaxUfsReadConcurrency() {
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -9011,7 +9011,7 @@ public final class Protocol {
       ".proto.dataserver.OpenUfsBlockOptions\"\243\001" +
       "\n\023OpenUfsBlockOptions\022\020\n\010ufs_path\030\001 \001(\t\022" +
       "\026\n\016offset_in_file\030\002 \001(\003\022\022\n\nblock_size\030\003 " +
-      "\001(\003\022\035\n\025maxUfsReadConcurrency\030\004 \001(\005\022\017\n\007mo",
+      "\001(\003\022\035\n\025maxUfsReadConcurrency\030@ \001(\005\022\017\n\007mo",
       "untId\030\005 \001(\003\022\020\n\010no_cache\030\006 \001(\010\022\014\n\004user\030\007 " +
       "\001(\t\"\333\001\n\014WriteRequest\0223\n\004type\030\001 \001(\0162%.all" +
       "uxio.proto.dataserver.RequestType\022\n\n\002id\030" +
