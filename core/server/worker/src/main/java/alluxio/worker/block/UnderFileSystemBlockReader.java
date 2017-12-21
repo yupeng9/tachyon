@@ -226,7 +226,7 @@ public final class UnderFileSystemBlockReader implements BlockReader {
       try {
         bytesRead = buf.writeBytes(mUnderFileSystemInputStream, bytesToRead);
       } catch (IOException e) {
-        LOG.debug("Failed to read from ufs instream ");
+        LOG.info("Failed to read from ufs instream " + e);
         thrownException = e;
         if (mUnderFileSystemInputStream instanceof CachedSeekableInputStream) {
           // this may happen when the cached input stream is stale
@@ -234,6 +234,8 @@ public final class UnderFileSystemBlockReader implements BlockReader {
           UnderFileSystem ufs = ufsInfo.getUfs();
           mUfsInstreamManager
               .invalidate((CachedSeekableInputStream) mUnderFileSystemInputStream);
+          LOG.info("Reset to offset {}",
+              ((CachedSeekableInputStream) mUnderFileSystemInputStream).getPos());
           mUnderFileSystemInputStream =
               mUfsInstreamManager.acquire(ufs, mBlockMeta.getUnderFileSystemPath(),
                   OpenOptions.defaults().setOffset(
