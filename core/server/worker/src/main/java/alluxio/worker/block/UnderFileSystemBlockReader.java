@@ -225,6 +225,7 @@ public final class UnderFileSystemBlockReader implements BlockReader {
     while (retryPolicy.attemptRetry()) {
       try {
         bytesRead = buf.writeBytes(mUnderFileSystemInputStream, bytesToRead);
+        break;
       } catch (IOException e) {
         LOG.info("Failed to read from ufs instream " + e);
         thrownException = e;
