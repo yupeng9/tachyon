@@ -779,10 +779,7 @@ public final class DefaultBlockMaster extends AbstractMaster implements BlockMas
       return new Command(CommandType.Register, new ArrayList<Long>());
     }
 
-    synchronized (worker) {
-      // Technically, 'worker' should be confirmed to still be in the data structure. Lost worker
-      // detection can remove it. However, we are intentionally ignoring this race, since the worker
-      // will just re-register regardless.
+    synchronized (this) {
       processWorkerRemovedBlocks(worker, removedBlockIds);
       processWorkerAddedBlocks(worker, addedBlocksOnTiers);
       processWorkerMetrics(worker.getWorkerAddress().getHost(), metrics);
